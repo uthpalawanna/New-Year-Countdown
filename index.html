@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 Digital Countdown Animation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c0c2e, #1a1a40);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0 30px;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 114, 255, 0.3);
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0a0ff;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        
+        .animation-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 40px 0;
+        }
+        
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+        
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px 15px;
+            min-width: 150px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .countdown-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 114, 255, 0.4);
+            border-color: rgba(0, 198, 255, 0.5);
+        }
+        
+        .countdown-value {
+            font-size: 4.5rem;
+            font-weight: 800;
+            background: linear-gradient(to bottom, #fff, #a0a0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1;
+            margin-bottom: 5px;
+            text-shadow: 0 0 15px rgba(160, 160, 255, 0.5);
+        }
+        
+        .countdown-label {
+            font-size: 1.2rem;
+            color: #a0a0ff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .year-display {
+            position: relative;
+            margin: 40px 0;
+        }
+        
+        .year {
+            font-size: 12rem;
+            font-weight: 900;
+            background: linear-gradient(to right, #00c6ff, #0072ff, #8a2be2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(0, 114, 255, 0.5);
+            letter-spacing: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .year-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 114, 255, 0.3) 0%, transparent 70%);
+            filter: blur(40px);
+            z-index: 1;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background: linear-gradient(to right, #0072ff, #00c6ff);
+            border: none;
+            color: white;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4);
+        }
+        
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 114, 255, 0.6);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button.secondary {
+            background: linear-gradient(to right, #8a2be2, #4b0082);
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+        }
+        
+        button.secondary:hover {
+            box-shadow: 0 10px 20px rgba(138, 43, 226, 0.6);
+        }
+        
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .message {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px auto;
+            max-width: 800px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .message h2 {
+            color: #00c6ff;
+            margin-bottom: 15px;
+            font-size: 2rem;
+        }
+        
+        .message p {
+            line-height: 1.7;
+            font-size: 1.1rem;
+            color: #d0d0ff;
+        }
+        
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            top: -10px;
+        }
+        
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #fff;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #a0a0ff;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .year {
+                font-size: 8rem;
+                letter-spacing: 5px;
+            }
+            
+            .countdown-value {
+                font-size: 3.5rem;
+            }
+            
+            .countdown-item {
+                min-width: 120px;
+                padding: 20px 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .year {
+                font-size: 5rem;
+                letter-spacing: 3px;
+            }
+            
+            .countdown-value {
+                font-size: 2.5rem;
+            }
+            
+            .countdown-item {
+                min-width: 90px;
+                padding: 15px 5px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 90%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles-container" id="particles"></div>
+    <div class="celebration" id="celebration"></div>
+    
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calendar-alt"></i> Countdown to 2026</h1>
+            <p class="subtitle">Watch the animated countdown as we approach the year 2026. Experience interactive visual effects and celebrate when the countdown completes!</p>
+        </header>
+        
+        <div class="animation-area">
+            <div class="countdown-container">
+                <div class="countdown-item">
+                    <div class="countdown-value" id="days">365</div>
+                    <div class="countdown-label">Days</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="hours">23</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="minutes">59</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="seconds">59</div>
+                    <div class="countdown-label">Seconds</div>
+                </div>
+            </div>
+            
+            <div class="year-display">
+                <div class="year-glow"></div>
+                <div class="year" id="year">2025</div>
+            </div>
+            
+            <div class="controls">
+                <button id="startBtn">
+                    <i class="fas fa-play"></i> Start Countdown
+                </button>
+                <button id="resetBtn" class="secondary">
+                    <i class="fas fa-redo"></i> Reset Countdown
+                </button>
+                <button id="celebrateBtn" class="secondary">
+                    <i class="fas fa-birthday-cake"></i> Celebrate 2026
+                </button>
+            </div>
+        </div>
+        
+        <div class="message">
+            <h2><i class="fas fa-rocket"></i> Welcome to 2026 Animation</h2>
+            <p>This interactive animation counts down to the year 2026 using HTML, CSS, and JavaScript. The countdown displays days, hours, minutes, and seconds remaining until January 1, 2026. You can start the countdown, reset it, or trigger a celebration animation for 2026. The background features dynamic particle effects that respond to mouse movement, creating an immersive visual experience.</p>
+            <p style="margin-top: 15px;">As we approach 2026, the animation intensifies with color changes and particle acceleration. When the countdown reaches zero, a spectacular celebration with confetti and fireworks begins automatically.</p>
+        </div>
+        
+        <footer>
+            <p>2026 Countdown Animation | Created with HTML, CSS & JavaScript | <i class="fas fa-heart" style="color:#ff4757;"></i></p>
+        </footer>
+    </div>
+
+    <script>
+        // DOM Elements
+        const daysElement = document.getElementById('days');
+        const hoursElement = document.getElementById('hours');
+        const minutesElement = document.getElementById('minutes');
+        const secondsElement = document.getElementById('seconds');
+        const yearElement = document.getElementById('year');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const celebrateBtn = document.getElementById('celebrateBtn');
+        const particlesContainer = document.getElementById('particles');
+        const celebrationElement = document.getElementById('celebration');
+        
+        // Countdown variables
+        let countdownInterval;
+        let targetDate = new Date('January 1, 2026 00:00:00').getTime();
+        let isCounting = false;
+        
+        // Particle system variables
+        let particles = [];
+        let mouseX = 0;
+        let mouseY = 0;
+        
+        // Initialize the page
+        function init() {
+            createParticles();
+            updateCountdown();
+            setupEventListeners();
+            updateYearDisplay();
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            startBtn.addEventListener('click', toggleCountdown);
+            resetBtn.addEventListener('click', resetCountdown);
+            celebrateBtn.addEventListener('click', triggerCelebration);
+            
+            // Mouse movement for particle interaction
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            
+            // Touch movement for mobile devices
+            document.addEventListener('touchmove', (e) => {
+                mouseX = e.touches[0].clientX;
+                mouseY = e.touches[0].clientY;
+            });
+        }
+        
+        // Create background particles
+        function createParticles() {
+            const particleCount = 100;
+            
+            for (let i = 0; i < particleCount; i++) {
+                createParticle();
+            }
+            
+            // Update particles animation
+            function animateParticles() {
+                particles.forEach((particle, index) => {
+                    // Move particle
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    
+                    // Apply mouse attraction
+                    const dx = mouseX - particle.x;
+                    const dy = mouseY - particle.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 150) {
+                        particle.vx += dx * 0.0005;
+                        particle.vy += dy * 0.0005;
+                    }
+                    
+                    // Bounce off edges
+                    if (particle.x <= 0 || particle.x >= window.innerWidth) {
+                        particle.vx *= -0.8;
+                        particle.x = particle.x <= 0 ? 1 : window.innerWidth - 1;
+                    }
+                    
+                    if (particle.y <= 0 || particle.y >= window.innerHeight) {
+                        particle.vy *= -0.8;
+                        particle.y = particle.y <= 0 ? 1 : window.innerHeight - 1;
+                    }
+                    
+                    // Apply friction
+                    particle.vx *= 0.99;
+                    particle.vy *= 0.99;
+                    
+                    // Update DOM element
+                    particle.element.style.left = `${particle.x}px`;
+                    particle.element.style.top = `${particle.y}px`;
+                    particle.element.style.opacity = particle.opacity;
+                    particle.element.style.transform = `scale(${particle.size})`;
+                    particle.element.style.background = `rgba(${particle.color}, ${particle.opacity})`;
+                });
+                
+                requestAnimationFrame(animateParticles);
+            }
+            
+            animateParticles();
+        }
+        
+        // Create a single particle
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random properties
+            const size = Math.random() * 5 + 1;
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            const color = `${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}`;
+            const opacity = Math.random() * 0.5 + 0.2;
+            
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            particle.style.background = `rgba(${color}, ${opacity})`;
+            
+            particlesContainer.appendChild(particle);
+            
+            // Store particle data
+            particles.push({
+                element: particle,
+                x: x,
+                y: y,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                size: size / 5,
+                color: color,
+                opacity: opacity
+            });
+        }
+        
+        // Update the countdown display
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const timeLeft = targetDate - now;
+            
+            // If countdown is finished
+            if (timeLeft <= 0) {
+                daysElement.textContent = '00';
+                hoursElement.textContent = '00';
+                minutesElement.textContent = '00';
+                secondsElement.textContent = '00';
+                yearElement.textContent = '2026';
+                
+                // Stop countdown
+                if (isCounting) {
+                    clearInterval(countdownInterval);
+                    isCounting = false;
+                    startBtn.innerHTML = '<i class="fas fa-play"></i> Start Countdown';
+                }
+                
+                // Trigger celebration
+                triggerCelebration();
+                return;
+            }
+            
+            // Calculate time units
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            // Update display
+            daysElement.textContent = days.toString().padStart(2, '0');
+            hoursElement.textContent = hours.toString().padStart(2, '0');
+            minutesElement.textContent = minutes.toString().padStart(2, '0');
+            secondsElement.textContent = seconds.toString().padStart(2, '0');
+            
+            // Update year display with transition effect
+            updateYearDisplay();
+            
+            // Intensify effects as we approach 2026
+            const daysTotal = 365; // Days in a year
+            const intensity = 1 - (days / daysTotal);
+            
+            // Change year color based on intensity
+            const red = Math.floor(0 + (255 * intensity));
+            const green = Math.floor(198 - (100 * intensity));
+            const blue = Math.floor(255 - (100 * intensity));
+            
+            yearElement.style.background = `linear-gradient(to right, rgb(${red}, ${green}, ${blue}), #0072ff, #8a2be2)`;
+            yearElement.style.webkitBackgroundClip = 'text';
+            yearElement.style.backgroundClip = 'text';
+        }
+        
+        // Update year display with transition effect
+        function updateYearDisplay() {
+            const now = new Date().getTime();
+            const timeLeft = targetDate - now;
+            const currentYear = new Date().getFullYear();
+            
+            // Calculate progress toward 2026
+            const startOfYear = new Date(`January 1, ${currentYear} 00:00:00`).getTime();
+            const endOfYear = new Date(`January 1, ${currentYear + 1} 00:00:00`).getTime();
+            const yearProgress = (now - startOfYear) / (endOfYear - startOfYear);
+            
+            // Display current year with decimal progress
+            if (currentYear < 2026) {
+                const progressDecimal = currentYear + yearProgress;
+                yearElement.textContent = progressDecimal.toFixed(4);
+            }
+        }
+        
+        // Toggle countdown on/off
+        function toggleCountdown() {
+            if (isCounting) {
+                // Stop countdown
+                clearInterval(countdownInterval);
+                isCounting = false;
+                startBtn.innerHTML = '<i class="fas fa-play"></i> Start Countdown';
+                startBtn.style.background = 'linear-gradient(to right, #0072ff, #00c6ff)';
+            } else {
+                // Start countdown
+                countdownInterval = setInterval(updateCountdown, 1000);
+                isCounting = true;
+                startBtn.innerHTML = '<i class="fas fa-pause"></i> Pause Countdown';
+                startBtn.style.background = 'linear-gradient(to right, #ff4757, #ff6b81)';
+                updateCountdown(); // Immediate update
+            }
+        }
+        
+        // Reset countdown to initial state
+        function resetCountdown() {
+            targetDate = new Date('January 1, 2026 00:00:00').getTime();
+            
+            if (isCounting) {
+                clearInterval(countdownInterval);
+                isCounting = false;
+                startBtn.innerHTML = '<i class="fas fa-play"></i> Start Countdown';
+                startBtn.style.background = 'linear-gradient(to right, #0072ff, #00c6ff)';
+            }
+            
+            updateCountdown();
+            celebrationElement.style.opacity = '0';
+            
+            // Clear any existing celebration elements
+            while (celebrationElement.firstChild) {
+                celebrationElement.removeChild(celebrationElement.firstChild);
+            }
+        }
+        
+        // Trigger celebration animation
+        function triggerCelebration() {
+            // Show celebration container
+            celebrationElement.style.opacity = '1';
+            
+            // Create confetti
+            createConfetti();
+            
+            // Create fireworks
+            createFireworks();
+            
+            // Hide celebration after 5 seconds
+            setTimeout(() => {
+                celebrationElement.style.opacity = '0';
+                
+                // Clear celebration elements after fade out
+                setTimeout(() => {
+                    while (celebrationElement.firstChild) {
+                        celebrationElement.removeChild(celebrationElement.firstChild);
+                    }
+                }, 500);
+            }, 5000);
+        }
+        
+        // Create confetti animation
+        function createConfetti() {
+            const confettiCount = 200;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Random properties
+                const colors = ['#ff4757', '#2ed573', '#1e90ff', '#ffa502', '#ff6b81', '#70a1ff'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 10 + 5;
+                const left = Math.random() * 100;
+                const animationDuration = Math.random() * 3 + 2;
+                
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.backgroundColor = color;
+                confetti.style.left = `${left}vw`;
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                
+                // Add animation
+                confetti.style.animation = `fall ${animationDuration}s linear forwards`;
+                
+                // Add to celebration container
+                celebrationElement.appendChild(confetti);
+                
+                // Remove after animation completes
+                setTimeout(() => {
+                    if (confetti.parentNode === celebrationElement) {
+                        celebrationElement.removeChild(confetti);
+                    }
+                }, animationDuration * 1000);
+            }
+            
+            // Add CSS for confetti animation
+            if (!document.getElementById('confetti-animation')) {
+                const style = document.createElement('style');
+                style.id = 'confetti-animation';
+                style.textContent = `
+                    @keyframes fall {
+                        0% {
+                            top: -20px;
+                            transform: rotate(0deg);
+                        }
+                        100% {
+                            top: 100vh;
+                            transform: rotate(${Math.random() * 720}deg);
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+        
+        // Create fireworks animation
+        function createFireworks() {
+            const fireworkCount = 15;
+            
+            for (let i = 0; i < fireworkCount; i++) {
+                // Create firework explosion
+                setTimeout(() => {
+                    const centerX = Math.random() * window.innerWidth;
+                    const centerY = Math.random() * window.innerHeight;
+                    const particleCount = 50;
+                    const colors = ['#ff4757', '#2ed573', '#1e90ff', '#ffa502', '#ff6b81', '#70a1ff'];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    // Create explosion particles
+                    for (let j = 0; j < particleCount; j++) {
+                        const particle = document.createElement('div');
+                        particle.classList.add('firework');
+                        
+                        const angle = Math.random() * Math.PI * 2;
+                        const velocity = Math.random() * 5 + 2;
+                        const size = Math.random() * 4 + 2;
+                        
+                        particle.style.width = `${size}px`;
+                        particle.style.height = `${size}px`;
+                        particle.style.backgroundColor = color;
+                        particle.style.left = `${centerX}px`;
+                        particle.style.top = `${centerY}px`;
+                        particle.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+                        
+                        celebrationElement.appendChild(particle);
+                        
+                        // Animate particle
+                        const vx = Math.cos(angle) * velocity;
+                        const vy = Math.sin(angle) * velocity;
+                        
+                        let posX = centerX;
+                        let posY = centerY;
+                        let opacity = 1;
+                        
+                        const animateParticle = () => {
+                            posX += vx;
+                            posY += vy;
+                            opacity -= 0.02;
+                            
+                            particle.style.left = `${posX}px`;
+                            particle.style.top = `${posY}px`;
+                            particle.style.opacity = opacity;
+                            
+                            if (opacity > 0) {
+                                requestAnimationFrame(animateParticle);
+                            } else {
+                                if (particle.parentNode === celebrationElement) {
+                                    celebrationElement.removeChild(particle);
+                                }
+                            }
+                        };
+                        
+                        requestAnimationFrame(animateParticle);
+                    }
+                }, i * 300); // Stagger fireworks
+            }
+        }
+        
+        // Initialize the animation when page loads
+        window.addEventListener('load', init);
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            // Simple resize handling - in a more complex app we might want to reposition particles
+        });
+    </script>
+</body>
+</html>
